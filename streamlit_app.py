@@ -303,7 +303,7 @@ if uploaded_file:
     st.sidebar.success(f"{len(temp_df):,} reviews loaded")
 
 # Sample size
-use_sampling = st.sidebar.checkbox("Use subset for demo", value=True)
+use_sampling = st.sidebar.checkbox("Use subset", value=True)
 sample_size = None
 if use_sampling:
     sample_size = st.sidebar.slider("Number of reviews", 100, 500000, 10000, step=1000)
