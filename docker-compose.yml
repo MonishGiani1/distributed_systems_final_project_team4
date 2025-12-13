@@ -1,0 +1,83 @@
+services:
+  # Main Streamlit Application
+  streamlit-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.streamlit
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./data:/app/data
+      - ./results:/app/results
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - poison-net
+    restart: on-failure
+
+  # Redis for managing user queues and feedback
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - poison-net
+    command: redis-server --maxclients 10000 --timeout 300
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # Single container with 200 legitimate users
+  legitimate-pool:
+    build:
+      context: .
+      dockerfile: Dockerfile.legitimate
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - NUM_USERS=200
+      - USER_TYPE=legitimate
+    depends_on:
+      - redis
+    networks:
+      - poison-net
+
+  # Single container with 150 simple attacker users
+  attacker-pool:
+    build:
+      context: .
+      dockerfile: Dockerfile.attacker
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - NUM_USERS=150
+      - USER_TYPE=attacker
+    depends_on:
+      - redis
+    networks:
+      - poison-net
+
+  # Single container with 50 Byzantine fault attackers
+  byzantine-pool:
+    build:
+      context: .
+      dockerfile: Dockerfile.byzantine
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - NUM_USERS=50
+      - USER_TYPE=byzantine
+    depends_on:
+      - redis
+    networks:
+      - poison-net
+
+networks:
+  poison-net:
+    driver: bridge

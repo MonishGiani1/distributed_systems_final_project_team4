@@ -1,0 +1,12 @@
+# File 3: Dockerfile.users
+
+FROM python:3.9-slim
+
+WORKDIR /app
+
+COPY requirements_users.txt .
+RUN pip install --no-cache-dir -r requirements_users.txt
+
+COPY user_simulator.py .
+
+CMD ["python", "user_simulator.py"]

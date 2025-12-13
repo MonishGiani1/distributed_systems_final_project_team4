@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: byzantine-pool
+  namespace: poison-attack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: byzantine-pool
+  template:
+    metadata:
+      labels:
+        app: byzantine-pool
+    spec:
+      containers:
+      - name: byzantine-worker
+        image: poison-byzantine:latest
+        imagePullPolicy: Never
+        env:
+        - name: REDIS_HOST
+          value: "redis"
+        - name: REDIS_PORT
+          value: "6379"
+        - name: NUM_USERS
+          value: "50"
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"

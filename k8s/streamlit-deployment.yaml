@@ -1,0 +1,61 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: streamlit-app
+  namespace: poison-attack
+spec:
+  type: NodePort
+  ports:
+  - port: 8501
+    targetPort: 8501
+    nodePort: 30001
+  selector:
+    app: streamlit-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: streamlit-app
+  namespace: poison-attack
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: streamlit-app
+  template:
+    metadata:
+      labels:
+        app: streamlit-app
+    spec:
+      containers:
+      - name: streamlit
+        image: poison-streamlit:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8501
+        env:
+        - name: REDIS_HOST
+          value: "redis"
+        - name: REDIS_PORT
+          value: "6379"
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+        volumeMounts:
+        - name: models
+          mountPath: /app/models
+        - name: results
+          mountPath: /app/results
+      volumes:
+      - name: models
+        hostPath:
+          path: /home/monish/ds_project/models
+          type: Directory
+      - name: results
+        hostPath:
+          path: /home/monish/ds_project/results
+          type: Directory

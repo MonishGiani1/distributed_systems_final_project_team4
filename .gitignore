@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+venv/
+.env
+.idea/
+
+# ML / DL models
+*.pt
+*.pth
+*.ckpt
+*.h5
+*.onnx
+*.pkl
+
+# Data
+data/
+datasets/
+models/
+distilbert_results/
+results/
