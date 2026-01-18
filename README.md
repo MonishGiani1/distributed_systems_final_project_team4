@@ -2,7 +2,7 @@
 
 A comprehensive demonstration platform for studying data poisoning attacks in distributed machine learning systems. This project simulates a federated learning environment where 400 concurrent users (legitimate and malicious) provide feedback that influences ML model training.
 
-## 🎯 Overview
+##  Overview
 
 This simulation demonstrates:
 - **Data Poisoning Attacks**: Label flipping and Byzantine fault attacks
@@ -11,7 +11,7 @@ This simulation demonstrates:
 - **Spectral Defense**: Advanced poisoning detection using spectral signatures
 - **Real-time Visualization**: Interactive dashboards showing attack impacts
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Features](#features)
 - [Architecture](#architecture)
@@ -23,7 +23,7 @@ This simulation demonstrates:
 - [Understanding Results](#understanding-results)
 - [Troubleshooting](#troubleshooting)
 
-## ✨ Features
+## Features
 
 ### Attack Simulation
 - **400 Concurrent Users**: 200 legitimate, 150 attackers, 50 Byzantine
@@ -48,7 +48,7 @@ This simulation demonstrates:
 - Attack Success Rate (ASR) metrics
 - User activity breakdown
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -72,7 +72,7 @@ This simulation demonstrates:
 └────────┘ └────────┘ └────────┘
 ```
 
-## 📦 Prerequisites
+## Prerequisites
 
 ### For Local Deployment
 - **Docker Desktop** (latest version)
@@ -87,7 +87,7 @@ This simulation demonstrates:
 - **Docker** installed
 - **Docker Hub** account (free)
 
-## 🚀 Local Setup
+## Local Setup
 
 ### Step 1: Clone Repository
 
@@ -112,27 +112,9 @@ text,rating
 Place your dataset in the `data/` directory:
 ```bash
 mkdir -p data
-# Copy your dataset to data/books_10k_clean.csv or similar
 ```
 
-### Step 3: Train Models (Optional)
-
-If you want to train your own models:
-
-```bash
-# Install training dependencies
-pip install -r requirements.txt
-
-# Train traditional models (CPU, ~10-20 minutes for 100k samples)
-python train_traditional_models.py
-
-# Train deep learning models (GPU recommended, ~2-3 hours for 100k samples)
-python train_modern_models.py
-```
-
-**Note**: Pre-trained models can be downloaded from Azure Blob Storage automatically when using cloud deployment.
-
-### Step 4: Start Docker Containers
+### Step 3: Start Docker Containers
 
 ```bash
 # Start all services
@@ -149,7 +131,7 @@ docker-compose ps
 # - byzantine-pool
 ```
 
-### Step 5: Access Application
+### Step 4: Access Application
 
 Open browser and navigate to:
 ```
@@ -158,7 +140,7 @@ http://localhost:8501
 
 Wait 30-60 seconds for all 400 user threads to initialize.
 
-### Step 6: Run Simulation
+### Step 5: Run Simulation
 
 1. **Upload Dataset**: Click "Upload Dataset (CSV)" in sidebar
 2. **Configure Settings**: 
@@ -169,7 +151,7 @@ Wait 30-60 seconds for all 400 user threads to initialize.
 4. **Monitor Progress**: Watch real-time processing of reviews
 5. **View Results**: Analyze attack impacts and model performance
 
-## ☁️ Azure Cloud Deployment
+## Azure Cloud Deployment
 
 ### Prerequisites
 - Azure subscription (Azure for Students recommended)
@@ -179,20 +161,18 @@ Wait 30-60 seconds for all 400 user threads to initialize.
 ### Automated Deployment Script
 
 ```bash
-# Make script executable
 chmod +x azure-setup.sh
 
-# Run deployment script
 ./azure-setup.sh
 ```
 
 The script will:
-1. ✅ Login to Azure
-2. ✅ Create resource group
-3. ✅ Build Docker images
-4. ✅ Push to Docker Hub
-5. ✅ Deploy to Azure Container Instances
-6. ✅ Provide access URL
+1. Login to Azure
+2. Create resource group
+3. Build Docker images
+4. Push to Docker Hub
+5. Deploy to Azure Container Instances
+6. Provide access URL
 
 ### Manual Deployment Steps
 
@@ -208,7 +188,7 @@ az login
 
 ```bash
 RESOURCE_GROUP="poison-simulation-rg"
-LOCATION="eastus"  # or your preferred region
+LOCATION="eastus"  
 
 az group create \
   --name $RESOURCE_GROUP \
@@ -218,19 +198,15 @@ az group create \
 #### 3. Build and Push Docker Images
 
 ```bash
-# Login to Docker Hub
 docker login
 
-# Set your Docker Hub username
 DOCKERHUB_USERNAME="yourusername"
 
-# Build images
 docker build -f Dockerfile.streamlit -t ${DOCKERHUB_USERNAME}/poison-streamlit:latest .
 docker build -f Dockerfile.legitimate -t ${DOCKERHUB_USERNAME}/poison-legitimate:latest .
 docker build -f Dockerfile.attacker -t ${DOCKERHUB_USERNAME}/poison-attacker:latest .
 docker build -f Dockerfile.byzantine -t ${DOCKERHUB_USERNAME}/poison-byzantine:latest .
 
-# Push to Docker Hub
 docker push ${DOCKERHUB_USERNAME}/poison-streamlit:latest
 docker push ${DOCKERHUB_USERNAME}/poison-legitimate:latest
 docker push ${DOCKERHUB_USERNAME}/poison-attacker:latest
@@ -242,7 +218,6 @@ docker push ${DOCKERHUB_USERNAME}/poison-byzantine:latest
 Edit `azure-deploy.yaml` and replace image names:
 
 ```yaml
-# Replace all instances of "idkwhatnametoput" with your Docker Hub username
 image: yourusername/poison-streamlit:latest
 image: yourusername/poison-legitimate:latest
 image: yourusername/poison-attacker:latest
@@ -320,7 +295,7 @@ Azure Container Instances pricing (approximate):
 - Delete resource group after demos
 - Use Azure for Students credits ($100 free)
 
-## 📖 Usage Guide
+## Usage Guide
 
 ### Basic Workflow
 
@@ -375,7 +350,7 @@ Azure Container Instances pricing (approximate):
 - Byzantine: Success on complex fault attacks
 - **Lower ASR = Better defense**
 
-## 🧪 Model Training
+## Model Training
 
 ### Traditional Models (CPU)
 
@@ -406,17 +381,9 @@ python train_modern_models.py
 - CUDA 11.0+
 - Mixed precision (fp16) enabled
 
-### Custom Training
 
-Edit configuration in training scripts:
 
-```python
-# In train_traditional_models.py or train_modern_models.py
-DATA_PATH = 'data/your_dataset.csv'
-SAMPLE_SIZE = 100000  # Adjust as needed
-```
-
-## 📊 Understanding Results
+## Understanding Results
 
 ### Typical Results (Without Defense)
 
@@ -441,7 +408,7 @@ SAMPLE_SIZE = 100000  # Adjust as needed
 - ASR drops significantly (40-50% reduction)
 - ~26% of samples filtered (matches attack rate)
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### "No user containers detected"
 
@@ -449,11 +416,9 @@ SAMPLE_SIZE = 100000  # Adjust as needed
 
 **Solution**:
 ```bash
-# Restart Docker services
 docker-compose down
 docker-compose up -d
 
-# Check logs
 docker-compose logs legitimate-pool
 docker-compose logs attacker-pool
 docker-compose logs byzantine-pool
@@ -465,15 +430,11 @@ docker-compose logs byzantine-pool
 
 **Solution**:
 ```bash
-# Check Redis container
 docker-compose ps redis
 
-# Restart Redis
 docker-compose restart redis
 
-# Test connection
 docker-compose exec redis redis-cli ping
-# Should return: PONG
 ```
 
 ### Slow Performance
@@ -494,20 +455,17 @@ docker-compose exec redis redis-cli ping
 
 1. **Check resource limits:**
 ```bash
-# Verify subscription quotas
 az vm list-usage --location eastus --output table
 ```
 
 2. **Reduce resources in `azure-deploy.yaml`:**
 ```yaml
-# Reduce CPU/memory if needed
-cpu: 0.5  # Instead of 1.0
-memoryInGb: 1.0  # Instead of 2.0
+cpu: 0.5  
+memoryInGb: 1.0  
 ```
 
 3. **Check Docker Hub images:**
 ```bash
-# Verify images exist
 docker search yourusername/poison-streamlit
 ```
 
@@ -526,14 +484,13 @@ python train_modern_models.py
 2. **Check models directory:**
 ```bash
 ls -la models/
-# Should contain: *.pkl files and model directories
 ```
 
-3. **Download from Azure (if using cloud deployment):**
+3. **Download from Azure:**
    - Models auto-download on first run
    - Check Azure Storage credentials in `azure-deploy.yaml`
 
-## 📝 Project Structure
+## Project Structure
 
 ```
 distributed_systems_FP/
@@ -561,32 +518,13 @@ distributed_systems_FP/
     └── your_dataset.csv
 ```
 
-## 🤝 Contributing
 
-Contributions welcome! Please:
-1. Fork the repository
-2. Create feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Open Pull Request
-
-## 📄 License
-
-This project is for educational purposes. Please cite if used in research.
-
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - **Datasets**: Amazon Product Reviews
 - **Models**: HuggingFace Transformers, Sentence-Transformers
 - **Infrastructure**: Docker, Redis, Azure Container Instances
 - **Visualization**: Streamlit, Plotly
 
-## 📧 Support
 
-For issues or questions:
-- Open GitHub Issue
-- Contact: [your-email@example.com]
 
----
-
-**Built with ❤️ for understanding ML security in distributed systems**
